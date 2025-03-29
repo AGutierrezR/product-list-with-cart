@@ -1,0 +1,121 @@
+:root {
+  --fontFamily: "Red Hat Text", sans-serif;
+
+  --fontWeightRegular: 400;
+  --fontWeightSemibold: 600;
+  --fontWeightBold: 700;
+
+  --clr-primary-red: hsl(14, 86%, 42%);
+  --clr-support-green: hsl(159, 69%, 38%);
+
+  --clr-neutral-rose-50: hsl(20, 50%, 98%);
+  --clr-neutral-rose-100: hsl(13, 31%, 94%);
+  --clr-neutral-rose-300: hsl(14, 25%, 72%);
+  --clr-neutral-rose-400: hsl(7, 20%, 60%);
+  --clr-neutral-rose-500: hsl(12, 20%, 44%);
+  --clr-neutral-rose-900: hsl(14, 65%, 9%);
+
+  --clr-neutral-white: hsl(0, 0%, 100%);
+}
+
+
+body {
+  --backgroundColor: var(--clr-neutral-rose-50);
+  --textBaseColor: var(--clr-neutral-rose-900);
+  --textMutedColor: var(--clr-neutral-rose-500);
+  --textPrimaryColor: var(--clr-primary-red);
+  --textInverseColor: var(--clr-neutral-white);
+  --headingColor: var(--clr-neutral-rose-900);
+
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightRegular);
+  background-color: var(--backgroundColor);
+  color: var(--textBaseColor);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--fontFamily);
+  font-weight: var(--fontWeightBold);
+  color: var(--headingColor);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-size: 1rem;
+  font-weight: var(--fontWeightSemibold);
+  color: var(--headingColor);
+}
+
+/* Layout classes */
+.wrapper {
+  --wrapper-max-width: 1220px;
+  --wrapper-padding: 2.5rem;
+  width: min(var(--wrapper-max-width), 100% - var(--wrapper-padding) * 2);
+  margin-inline: auto;
+}
+
+.flow > * + * {
+  margin-block-start: var(--flow-space, 1.75rem);
+}
+
+.with-sidebar {
+  --sidebar-gap: 2rem;
+  --sidebar-side-width: 23.75rem;
+  --sidebar-content-min-width: 50%;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sidebar-gap);
+}
+
+.sidebar {
+  flex-basis: var(--sidebar-side-width);
+  flex-grow: 1;
+}
+
+.not-sidebar {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: var(--sidebar-content-min-width);
+}
+/* End of layout classes */
+
+.sprite {
+  display: none;
+}
+
+.main-content {
+  --sidebar-content-min-width: 14.375rem;
+  padding-block: 3rem;
+}
+
+.products-container {
+  h2 {
+    font-size: 2rem;
+  }
+}
+
+.cart-container {
+  --headingColor: var(--textPrimaryColor);
+
+  align-self: start;
+  padding: 1rem;
+  background: var(--clr-neutral-white);
+  border-radius: 16px;
+}
+
+.empty-cart-content {
+  display: grid;
+  justify-items: center;
+  padding-block: 2rem;
+  font-size: 0.875rem;
+  font-weight: var(--fontWeightSemibold);
+  color: var(--textMutedColor);
+}
