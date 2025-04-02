@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         </picture>
 
         <div class="product-item__actions">
-          <button data-action="add" class="btn-add">
+          <button data-action="add" class="button button--secondary with-icon" data-alignment="center">
             <svg class="icon icon--add-to-cart">
               <use href="#:add-to-cart"/>
             </svg>

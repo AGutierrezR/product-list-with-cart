@@ -1,9 +1,12 @@
+/* Base layer */
 :root {
-  --fontFamily: "Red Hat Text", sans-serif;
+  --ff-body: "Red Hat Text", sans-serif;
+  --ff-heading: "Red Hat Text", sans-serif;
 
-  --fontWeightRegular: 400;
-  --fontWeightSemibold: 600;
-  --fontWeightBold: 700;
+  --fs-300: 0.875rem;
+  --fs-400: 1rem;
+  --fs-600: 1.5rem;
+  --fs-700: 2rem;
 
   --clr-primary-red: hsl(14, 86%, 42%);
   --clr-support-green: hsl(159, 69%, 38%);
@@ -18,55 +21,55 @@
   --clr-neutral-white: hsl(0, 0%, 100%);
 }
 
-body {
-  --backgroundColor: var(--clr-neutral-rose-50);
-  --textBaseColor: var(--clr-neutral-rose-900);
-  --textMutedColor: var(--clr-neutral-rose-500);
-  --textPrimaryColor: var(--clr-primary-red);
-  --textInverseColor: var(--clr-neutral-white);
-  --headingColor: var(--clr-neutral-rose-900);
-  --buttonBorderRadius: 20px;
+:root {
+  --background-main: var(--clr-neutral-rose-50);
+  --text-base: var(--clr-neutral-rose-900);
+  --text-muted: var(--clr-neutral-rose-500);
+  --text-primary: var(--clr-primary-red);
+  --text-hight-contrast: var(--clr-neutral-white);
 
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightRegular);
-  background-color: var(--backgroundColor);
-  color: var(--textBaseColor);
+  --font-size-heading-sm: var(--fs-400);
+  --font-size-heading-regular: var(--fs-600);
+  --font-size-heading-lg: var(--fs-700);
+
+  --font-size-sm: var(--fs-300);
+  --font-size-regular: var(--fs-400);
+
+  --border-radius-1: 8px;
+  --border-radius-2: 16px;
+  --border-radius-3: 50px;
+  --border-radius-cicle: 100%;
+}
+
+body {
+  font-family: var(--ff-body);
+  font-weight: 400;
+  background-color: var(--background-main);
+  color: var(--text-base);
 }
 
 h1,
 h2,
 h3,
-h4,
-h5,
-h6 {
-  font-family: var(--fontFamily);
-  font-weight: var(--fontWeightBold);
-  color: var(--headingColor);
+h4 {
+  font-family: var(--ff-heading);
+  font-weight: 700;
+  color: var(--text-base);
 }
 
-h3,
-h4,
-h5,
-h6 {
-  font-size: 1rem;
-  font-weight: var(--fontWeightSemibold);
-  color: var(--headingColor);
+h2 {
+  font-size: var(--font-size-heading-lg);
 }
 
-button {
-  all: unset;
-  margin: 0;
-  border: 1px solid var(--controlBorderColor);
-  padding-inline: 0.875rem;
-  display: inline-block;
-  vertical-align: middle;
-  white-space: normal;
-  line-height: 1;
-  display: inline-flex;
-  border-radius: 8px;
+h3 {
+  font-size: var(--font-size-heading-sm);
+  font-weight: 600;
+  color: var(--text-base);
 }
 
-/* Layout classes */
+/* End of base layer */
+
+/* Layout layer */
 .wrapper {
   --wrapper-max-width: 1220px;
   --wrapper-padding: 2.5rem;
@@ -98,8 +101,33 @@ button {
   flex-grow: 999;
   min-inline-size: var(--sidebar-content-min-width);
 }
-/* End of layout classes */
 
+.grid-auto-fill {
+  --auto-fit-min-col-size: 225px;
+  --auto-fit-gap: 1.5rem;
+
+  display: grid;
+  gap: var(--auto-fit-gap);
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(var(--auto-fit-min-col-size), 100%), 1fr)
+  );
+}
+
+.with-icon {
+  --with-icon-gap: 1rem;
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--with-icon-gap);
+
+  &[data-alignment="center"] {
+    align-items: center;
+  }
+}
+
+/* End of layout layer */
+
+/* Components layer */
 .sprite {
   display: none;
 }
@@ -122,28 +150,33 @@ button {
   --icon-width: auto;
 }
 
-.btn-add {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 2.625rem;
-  font-size: 13px;
-  gap: 0.5rem;
+.button {
+  box-sizing: border-box;
+  display: inline-flex;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border-radius: var(--border-radius-3);
+  padding: 0.5rem 1.75rem;
+
+  > * {
+    pointer-events: none;
+  }
+}
+
+.button--secondary {
+  color: var(--text-base);
   padding-inline: 28px;
-  color: var(--textBaseColor);
-  font-weight: var(--fontWeightSemibold);
   background: var(--clr-neutral-white);
+  padding: 0.5rem 1.75rem;
+  line-height: 1.858;
   border: 1px solid var(--clr-neutral-rose-500);
-  border-radius: var(--buttonBorderRadius);
 
   &:hover {
     color: var(--clr-primary-red);
     border-color: var(--clr-primary-red);
     cursor: pointer;
-  }
-
-  > * {
-    pointer-events: none;
   }
 }
 
@@ -152,14 +185,7 @@ button {
   padding-block: 3rem;
 }
 
-.products-container {
-  h2 {
-    font-size: 2rem;
-  }
-}
-
 .product-list {
-  padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
   gap: 1.5rem;
@@ -172,7 +198,7 @@ button {
 }
 
 .product-item__image {
-  border-radius: 8px;
+  border-radius: var(--border-radius-1);
   overflow: hidden;
 
   img {
@@ -202,12 +228,12 @@ button {
   justify-content: center;
   align-items: center;
   height: 2.625rem;
-  font-size: 1rem;
+  font-size: var(--font-size-regular);
   background: var(--clr-primary-red);
   padding: 12px;
   text-align: center;
   color: var(--clr-neutral-white);
-  border-radius: var(--buttonBorderRadius);
+  border-radius: var(--border-radius-3);
 
   button {
     box-sizing: border-box;
@@ -215,7 +241,7 @@ button {
     width: 1.125rem;
     height: 1.125rem;
     outline: 1px solid var(--clr-neutral-white);
-    border-radius: 100%;
+    border-radius: var(--border-radius-cicle);
   }
 
   :nth-child(2) {
@@ -224,28 +250,42 @@ button {
 }
 
 .product-item__category {
-  color: var(--textMutedColor);
+  color: var(--text-muted);
 }
 
 .product-item__price {
-  color: var(--textPrimaryColor);
-  font-weight: var(--fontWeightSemibold);
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .cart-container {
-  --headingColor: var(--textPrimaryColor);
-
   align-self: start;
   padding: 1rem;
   background: var(--clr-neutral-white);
-  border-radius: 16px;
+  border-radius: var(--border-radius-2);
+}
+
+.cart-container h2 {
+  font-size: var(--font-size-heading-regular);
 }
 
 .empty-cart-content {
   display: grid;
   justify-items: center;
   padding-block: 2rem;
-  font-size: 0.875rem;
-  font-weight: var(--fontWeightSemibold);
-  color: var(--textMutedColor);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-muted);
 }
+/* End of components layer */
+
+
+/* Utilities layer */
+[hidden] {
+  display: none;
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+/* End of utilities layer */
