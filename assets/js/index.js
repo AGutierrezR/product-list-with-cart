@@ -1,23 +1,61 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const res = await fetch("../../data.json");
-  const data = await res.json();
+/**
+ * @typedef {Object} ProductImage
+ * @property {string} thumbnail - Path to the thumbnail image.
+ * @property {string} mobile - Path to the mobile version of the image.
+ * @property {string} tablet - Path to the tablet version of the image.
+ * @property {string} desktop - Path to the desktop version of the image.
+ */
 
-  const productList = document.querySelector('[data-selector="product-list"]');
+/**
+ * @typedef {Object} Product
+ * @property {number} id - Unique identifier for the product.
+ * @property {ProductImage} image - Object containing different image versions.
+ * @property {string} name - Name of the product.
+ * @property {string} category - Category the product belongs to.
+ * @property {number} price - Price of the product.
+ */
 
-  data.forEach((element) => {
-    const elem = document.createElement("li");
-    elem.innerHTML = `
+/**
+ * Fetches all products from the server.
+ *
+ * @returns {Promise<Product[]>} A promise that resolves to an array of product objects.
+ */
+async function getAllProducts() {
+  return await fetch('../../data.json').then((res) => res.json())
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const products = await getAllProducts()
+  const productsMap = new Map(products.map((item) => [item.id, item]))
+  const cart = new Map()
+
+
+  const productListElem = document.querySelector(
+    '[data-selector="product-list"]',
+  )
+
+  productsMap.forEach((element) => {
+    const elem = document.createElement('li')
+    elem.innerHTML = /* HTML */ `
       <div class="product-item">
         <picture class="product-item__image">
-          <source srcset="${element.image.tablet}" media="(min-width: 640px)"/>
-          <source srcset="${element.image.desktop}" media="(min-width: 900px)"/>
-          <img src="${element.image.mobile}"/>
+          <source srcset="${element.image.tablet}" media="(min-width: 640px)" />
+          <source
+            srcset="${element.image.desktop}"
+            media="(min-width: 900px)"
+          />
+          <img src="${element.image.mobile}" />
         </picture>
 
         <div class="product-item__actions">
-          <button data-action="add" class="button button--secondary with-icon" data-alignment="center">
+          <button
+            data-product-id="${element.id}"
+            data-action="add"
+            data-alignment="center"
+            class="product-item__button button button--secondary with-icon"
+          >
             <svg class="icon icon--add-to-cart">
-              <use href="#:add-to-cart"/>
+              <use href="#:add-to-cart" />
             </svg>
             <span>Add to Cart</span>
           </button>
@@ -38,29 +76,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
 
         <div class="product-item__info">
-          <div class="product-item__category">${element.category}</div>
+          <div class="text-sm product-item__category">${element.category}</div>
           <h3 class="product-item__name">${element.name}</h3>
-          <p class="product-item__price">${(+element.price).toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD",
-          })}</p>
+          <p class="product-item__price">
+            ${(+element.price).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </p>
         </div>
       </div>
-      `;
+    `
 
-    productList.appendChild(elem);
-  });
-
-
+    productListElem.appendChild(elem)
+  })
 
   // Add event listener for click on product list
-  productList.addEventListener("click", (ev) => {
-    const target = ev.target;
-
-    if (!target.dataset.action) {
-      return;
-    }
-
-    console.log("test");
-  });
-});
+  productListElem.addEventListener('click', (ev) => {
+    // event logic
+  })
+})
