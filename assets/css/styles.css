@@ -1,7 +1,7 @@
 /* Base layer */
 :root {
-  --ff-body: "Red Hat Text", sans-serif;
-  --ff-heading: "Red Hat Text", sans-serif;
+  --ff-body: 'Red Hat Text', sans-serif;
+  --ff-heading: 'Red Hat Text', sans-serif;
 
   --fs-300: 0.875rem;
   --fs-400: 1rem;
@@ -115,12 +115,13 @@ h3 {
 }
 
 .with-icon {
-  --with-icon-gap: 1rem;
+  --_with-icon-gap: var(--with-icon-gap, 1rem);
+
   display: inline-flex;
   align-items: baseline;
-  gap: var(--with-icon-gap);
+  gap: var(--_with-icon-gap);
 
-  &[data-alignment="center"] {
+  &[data-alignment='center'] {
     align-items: center;
   }
 }
@@ -146,8 +147,8 @@ h3 {
 }
 
 .icon--quantity-control {
-  --icon-height: auto;
-  --icon-width: auto;
+  --icon-height: 0.625rem;
+  --icon-width: 0.625rem;
 }
 
 .button {
@@ -159,10 +160,6 @@ h3 {
   cursor: pointer;
   border-radius: var(--border-radius-3);
   padding: 0.5rem 1.75rem;
-
-  > * {
-    pointer-events: none;
-  }
 }
 
 .button--secondary {
@@ -204,9 +201,15 @@ h3 {
   img {
     width: 100%;
   }
+
+  &[data-status='selected'] {
+    outline: 2px solid var(--clr-primary-red);
+  }
 }
 
 .product-item__actions {
+  --with-icon-gap: 0.5rem;
+
   position: absolute;
   grid-row: 1 / 2;
   justify-self: center;
@@ -216,6 +219,7 @@ h3 {
 }
 
 .product-item__quantity-controls {
+
   button:hover {
     background: var(--clr-neutral-white);
     color: var(--clr-primary-red);
@@ -237,10 +241,16 @@ h3 {
 
   button {
     box-sizing: border-box;
-    padding: 4px;
-    width: 1.125rem;
-    height: 1.125rem;
-    outline: 1px solid var(--clr-neutral-white);
+    padding: 0;
+    aspect-ratio: 1;
+    width: 1.25rem;
+    display: inline-flex;
+    justify-content: center;
+    line-height: normal;
+    align-items: center;
+    border: 1px solid var(--clr-neutral-white);
+    background: transparent;
+    color: var(--clr-neutral-white);
     border-radius: var(--border-radius-cicle);
   }
 
@@ -254,7 +264,6 @@ h3 {
 }
 
 .product-item__price {
-  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -269,7 +278,7 @@ h3 {
   font-size: var(--font-size-heading-regular);
 }
 
-.empty-cart-content {
+.cart-empty {
   display: grid;
   justify-items: center;
   padding-block: 2rem;
@@ -278,7 +287,6 @@ h3 {
   color: var(--text-muted);
 }
 /* End of components layer */
-
 
 /* Utilities layer */
 [hidden] {
