@@ -20,10 +20,8 @@ dd {
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
-[role="list"] {
+[role='list'] {
   list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
 /* Set core root defaults */
@@ -41,6 +39,7 @@ body {
 /* A elements that don't have a class get default styles */
 a:not([class]) {
   text-decoration-skip-ink: auto;
+  color: currentColor;
 }
 
 /* Make images easier to work with */

@@ -1,4 +1,4 @@
-import { getAllProducts, currencyFormatter } from './utils.js'
+import { $, getAllProducts, currencyFormatter } from './utils.js'
 
 /**
  * @typedef {Object} ProductImage
@@ -28,29 +28,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const productsMap = new Map(products.map((item) => [item.id, item]))
   const cart = new Map()
 
-  function observeCart(callback) {
-    const originalSet = cart.set.bind(cart)
-    const originalDelete = cart.delete.bind(cart)
-
-    cart.set = (key, value) => {
-      const result = originalSet(key, value)
-      callback()
-      return result
-    }
-
-    cart.delete = (key) => {
-      const result = originalDelete(key)
-      callback()
-      return result
-    }
-
-    return cart
-  }
-
-  const productListElem = document.querySelector(
-    '[data-selector="product-list"]',
-  )
-  const cartList = document.querySelector('[data-selector="cart-list"]')
+  const productListElem = $('[data-selector="product-list"]')
+  const cartList = $('[data-selector="cart-list"]')
 
   productsMap.forEach((element) => {
     const elem = document.createElement('li')
@@ -68,11 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         <div class="product-item__actions">
           <button
+            class="product-item__button button"
+            data-button-variant="secondary"
             data-action="add"
             data-alignment="center"
-            class="product-item__button button button--secondary with-icon"
+            type="button"
           >
-            <svg class="icon icon--add-to-cart">
+            <svg viewbox="0 0 21 20" class="icon icon--add-to-cart">
               <use href="#:add-to-cart" />
             </svg>
             <span>Add to Cart</span>
@@ -98,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
 
         <div class="product-item__info">
-          <div class="text-sm product-item__category">${element.category}</div>
+          <small>${element.category}</small>
           <h3 class="product-item__name">${element.name}</h3>
           <p class="product-item__price text-primary">
             ${currencyFormatter(+element.price)}
@@ -146,22 +127,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /**
    * @param {HTMLElement} element
+   * TODO: Something
    */
   function updateProductItemUI(productId) {
-    const itemElement = productListElem.querySelector(
-      `[data-product-id="${productId}"]`,
-    )
-    const addButton = itemElement.querySelector('[data-action="add"]')
-    const quantityControlsWrap = itemElement.querySelector(
-      '[data-quantity-controls]',
-    )
-    const quantityDisplay = itemElement.querySelector('[data-quantity]')
-    const image = itemElement.querySelector('picture')
+    const itemElement = productListElem.find(`[data-product-id="${productId}"]`)
+    const addButton = itemElement.find('[data-action="add"]')
+    const quantityControlsWrap = itemElement.find('[data-quantity-controls]')
+    const quantityDisplay = itemElement.find('[data-quantity]')
+    const image = itemElement.find('picture')
 
     if (cart.has(productId)) {
       addButton.hidden = true
       quantityControlsWrap.hidden = false
-      quantityDisplay.innerText = cart.get(productId)
+      quantityDisplay.innerText = cart.get(productId).quantity
       image.dataset.status = 'selected'
     } else {
       addButton.hidden = false
@@ -172,9 +150,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function updateCartUI() {
-    const cartEmpty = document.querySelector('[data-selector="cart-empty"]')
-    const cartList = document.querySelector('[data-selector="cart-list"]')
-    const cartContainer = cartList.closest('.cart-content')
+    const cartItemQty = $('[data-selector="cart-items-quantity"]')
+    const cartEmpty = $('[data-selector="cart-empty"]')
+    const cartList = $('[data-selector="cart-list"]')
+    const cartContainer = cartList.closest('[data-selector="cart-content"]')
+    const cartTotalElem = $('[data-selector="cart-total"]')
+    const cartTotalPrice = cart
+      .values()
+      .reduce((acc, item) => acc + item.quantity * item.price, 0)
+    const cartTotalQty =
+      cart.values().reduce((acc, num) => acc + num.quantity, 0) || 0
+
+    cartItemQty.textContent = cartTotalQty
 
     if (cart.size > 0) {
       cartContainer.hidden = false
@@ -186,60 +173,60 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     cartList.innerHTML = ''
 
-    cart.forEach((quantity, productId) => {
-      const product = productsMap.get(+productId)
+    cart.forEach((item) => {
       const elem = document.createElement('li')
-      elem.dataset.productId = productId
+      elem.dataset.productId = item.id
       elem.innerHTML = /* HTML */ `
-        <h5 class="cart-item__name">${product.name}</h5>
-        <div class="cart-item__price-info">
-          <span class="cart-item__quantity">x${quantity}</span>
-          <span class="cart-item__price"
-            >@ ${currencyFormatter(product.price)}
-            <span>${currencyFormatter(product.price * quantity)}</span></span
-          >
+        <div class="cart-item text-sm">
+          <h3 class="cart-item__name text-sm">${item.name}</h3>
+          <div class="cart-item__price-info cluster">
+            <span class="cart-item__quantity text-primary font-600"
+              >x${item.quantity}</span
+            >
+            <span class="cart-item__price"
+              >@ ${currencyFormatter(item.price)}
+              <span class="font-600"
+                >${currencyFormatter(item.price * item.quantity)}</span
+              ></span
+            >
+          </div>
+          <button data-action="delete">
+            <svg class="icon icon--remove">
+              <use href="#:remove" />
+            </svg>
+          </button>
         </div>
-        <button data-action="delete" class="button">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="10"
-            height="10"
-            fill="none"
-            viewBox="0 0 10 10"
-          >
-            <path
-              fill="currentColor"
-              d="M8.375 9.375 5 6 1.625 9.375l-1-1L4 5 .625 1.625l1-1L5 4 8.375.625l1 1L6 5l3.375 3.375-1 1Z"
-            ></path>
-          </svg>
-        </button>
       `
 
       cartList.appendChild(elem)
     })
+
+    cartTotalElem.textContent = currencyFormatter(cartTotalPrice)
   }
 
   document.body.addEventListener('cart:add', ({ target }) => {
     const productId = target.dataset.productId
-    cart.set(productId, 1)
+    cart.set(productId, { ...productsMap.get(+productId), quantity: 1 })
     updateProductItemUI(productId)
     updateCartUI()
   })
 
   document.body.addEventListener('cart:increment', ({ target }) => {
     const productId = target.dataset.productId
-    const currentQuantity = cart.get(productId)
-    cart.set(productId, currentQuantity + 1)
+    const cartItem = cart.get(productId)
+    const currentQuantity = cartItem.quantity
+    cart.set(productId, { ...cartItem, quantity: currentQuantity + 1 })
     updateProductItemUI(productId)
     updateCartUI()
   })
 
   document.body.addEventListener('cart:decrement', ({ target }) => {
     const productId = target.dataset.productId
-    const currentQuantity = cart.get(productId)
+    const cartItem = cart.get(productId)
+    const currentQuantity = cartItem.quantity
 
     if (currentQuantity > 1) {
-      cart.set(productId, currentQuantity - 1)
+      cart.set(productId, { ...cartItem, quantity: currentQuantity - 1 })
     } else {
       cart.delete(productId)
     }
