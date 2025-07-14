@@ -54,10 +54,20 @@
 
 /* Global styles */
 body {
+  display: flex;
+  flex-direction: column;
   background-color: var(--clr-neutral-rose-50);
   font-family: var(--ff-body);
   font-weight: 400;
   color: var(--clr-neutral-rose-900);
+}
+
+main {
+  flex-grow: 1;
+}
+
+footer {
+  padding: var(--space-m);
 }
 
 :is(h1, h2, h3, h4) {
@@ -410,6 +420,7 @@ svg[role='img'][width][height] {
     border: 1px solid var(--clr-neutral-rose-300);
     background: transparent;
     color: var(--clr-neutral-rose-300);
+    cursor: pointer;
   }
 }
 
