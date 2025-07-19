@@ -30,6 +30,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const productListElem = $('[data-selector="product-list"]')
   const cartList = $('[data-selector="cart-list"]')
+  const cartConfirmBtn = $('[data-selector="cart-confirm-button"]')
+  const confirmModal = $('[data-selector="confirm-dialog"]')
 
   productsMap.forEach((element) => {
     const elem = document.createElement('li')
@@ -123,6 +125,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         bubbles: true,
       }),
     )
+  })
+
+  cartConfirmBtn.addEventListener('click', () => {
+    confirmModal.showModal()
   })
 
   /**
