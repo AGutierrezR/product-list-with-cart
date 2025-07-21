@@ -26,6 +26,9 @@ import { $, getAllProducts, currencyFormatter } from './utils.js'
 document.addEventListener('DOMContentLoaded', async () => {
   const products = await getAllProducts()
   const productsMap = new Map(products.map((item) => [item.id, item]))
+  /**
+   * @type {Map<string, Product & { quantity: number }>}
+   */
   const cart = new Map()
 
   const productListElem = $('[data-selector="product-list"]')
@@ -128,12 +131,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   })
 
   cartConfirmBtn.addEventListener('click', () => {
+    updateOrderSummary()
     confirmModal.showModal()
   })
 
+  confirmModal.addEventListener('submit', (ev) => {
+    cart.clear()
+    productListElem.querySelectorAll('[data-product-id]').forEach((item) => {
+      updateProductItemUI(item.dataset.productId)
+    })
+    updateCartUI()
+  })
+
   /**
-   * @param {HTMLElement} element
-   * TODO: Something
+   * Updates the UI elements of a product item based on its cart status.
+   *
+   * @param {string|number} productId - The unique identifier of the product
+   * @description
+   * This function manages the visibility and content of various UI elements:
+   * - Toggle visibility of add-to-cart button
+   * - Toggle visibility of quantity controls
+   * - Update quantity display
+   * - Update product image status
    */
   function updateProductItemUI(productId) {
     const itemElement = productListElem.find(`[data-product-id="${productId}"]`)
@@ -183,20 +202,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       const elem = document.createElement('li')
       elem.dataset.productId = item.id
       elem.innerHTML = /* HTML */ `
-        <div class="cart-item text-sm">
-          <h3 class="cart-item__name text-sm">${item.name}</h3>
-          <div class="cart-item__price-info cluster">
-            <span class="cart-item__quantity text-primary font-600"
-              >x${item.quantity}</span
-            >
-            <span class="cart-item__price"
-              >@ ${currencyFormatter(item.price)}
-              <span class="font-600"
-                >${currencyFormatter(item.price * item.quantity)}</span
-              ></span
-            >
+        <div class="cart-item cluster text-sm" data-nowrap>
+          <div class="cart-item__info flow">
+            <h3 class="cart-item__name grid-in-name text-sm">${item.name}</h3>
+            <div class="cart-item__price-info grid-in-price-info cluster">
+              <span class="cart-item__quantity text-primary font-600"
+                >x${item.quantity}</span
+              >
+              <span class="cart-item__price"
+                >@ ${currencyFormatter(item.price)}
+                <span class="font-600"
+                  >${currencyFormatter(item.price * item.quantity)}</span
+                ></span
+              >
+            </div>
           </div>
-          <button data-action="delete">
+          <button class="grid-in-slot" data-action="delete">
             <svg class="icon icon--remove">
               <use href="#:remove" />
             </svg>
@@ -208,6 +229,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     cartTotalElem.textContent = currencyFormatter(cartTotalPrice)
+  }
+
+  function updateOrderSummary() {
+    const orderSummary = $('[data-selector="order-summary-list"]')
+    const orderTotal = $('[data-selector="order-total"]')
+    const orderTotalPrice = cart
+      .values()
+      .reduce((acc, item) => acc + item.quantity * item.price, 0)
+
+    orderSummary.innerHTML = ''
+
+    cart.forEach((item) => {
+      const elem = document.createElement('li')
+      elem.innerHTML = /* HTML */ `
+        <div class="cart-item cluster text-sm" data-nowrap>
+          <img class="cart-item__image" src="${item.image.thumbnail}" />
+          <div class="cart-item__info flow">
+            <h3 class="cart-item__name grid-in-name text-sm">${item.name}</h3>
+            <div class="cart-item__price-info cluster grid-in-price-info">
+              <span class="cart-item__quantity text-primary font-600"
+                >x${item.quantity}</span
+              >
+              <span class="cart-item__price"
+                >@ ${currencyFormatter(item.price)}
+              </span>
+            </div>
+          </div>
+          <span class="font-600 cart-item__total-price"
+            >${currencyFormatter(item.price * item.quantity)}</span
+          >
+        </div>
+      `
+      orderSummary.appendChild(elem)
+    })
+
+    orderTotal.textContent = currencyFormatter(orderTotalPrice)
   }
 
   document.body.addEventListener('cart:add', ({ target }) => {

@@ -28,7 +28,6 @@
   --size-step-2: 1.5rem;
   --size-step-3: 2.25rem;
 
-
   --leading-flat: 1;
   --leading-fine: 1.2;
   --leading-standard: 1.4;
@@ -48,7 +47,6 @@
   --wrapper-max-width: 1216px;
   --gutter: var(--space-xl);
   --text-muted: var(--clr-neutral-rose-500);
-
 }
 /* End of base layer */
 
@@ -87,6 +85,9 @@ h2 {
 h3 {
   font-size: var(--size-step-1);
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 small {
@@ -174,10 +175,22 @@ dialog::backdrop {
   gap: var(--cluster-space, 1rem);
   justify-content: flex-start;
   align-items: center;
+
+  &[data-nowrap] {
+    flex-wrap: nowrap;
+  }
+}
+
+.repel {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: var(--repel-vertical-alignment, center);
+  gap: var(--gutter, var(--space-m));
 }
 
 .flow > * + * {
-  margin-block-start: var(--flow-space, 1.75rem);
+  margin-block-start: var(--flow-space, 1rem);
 }
 
 .sidebar {
@@ -231,7 +244,8 @@ dialog::backdrop {
   width: var(--_icon-width);
 }
 
-.icon--add-to-cart, .icon--carbon-neutral {
+.icon--add-to-cart,
+.icon--carbon-neutral {
   --icon-width: 1.25rem;
   --icon-height: 1.25rem;
 }
@@ -239,6 +253,11 @@ dialog::backdrop {
 .icon--quantity-control {
   --icon-height: 0.625rem;
   --icon-width: 0.625rem;
+}
+
+.icon--order-confirmed {
+  --icon-height: 2.625rem;
+  --icon-width: 2.625rem;
 }
 
 .icon--remove {
@@ -323,7 +342,6 @@ dialog::backdrop {
 }
 
 .product-item__actions {
-
   position: absolute;
   grid-row: 1 / 2;
   justify-self: center;
@@ -407,13 +425,8 @@ dialog::backdrop {
 }
 
 .cart-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: auto auto;
-  align-items: center;
-  gap: 8px;
-  padding-block: 1rem;
   border-bottom: 1px solid var(--clr-neutral-rose-100);
+  padding-block: var(--space-s);
 
   button {
     box-sizing: border-box;
@@ -430,12 +443,32 @@ dialog::backdrop {
     background: transparent;
     color: var(--clr-neutral-rose-300);
     cursor: pointer;
+
+    grid-area: slot;
   }
+}
+
+.cart-item__image {
+  flex-shrink: 0;
+  width: var(--space-xxl);
+  height: var(--space-xxl);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+
+.cart-item__info {
+  --flow-space: var(--space-xs);
+  min-width: 0;
+  flex-grow: 1;
 }
 
 .cart-item__price-info {
   --cluster-space: 1rem;
   color: var(--clr-neutral-rose-500);
+}
+
+.cart-item__total-price {
+  flex-shrink: 0;
 }
 
 .cart-total {
@@ -463,6 +496,36 @@ dialog::backdrop {
   gap: var(--space-xs);
   background-color: var(--clr-neutral-rose-50);
   border-radius: var(--radius-s);
+}
+
+.confimr-dialog {
+  --flow-space: var(--space-xxs);
+  max-width: 590px;
+  width: 100%;
+}
+
+.confimr-dialog button {
+  width: 100%;
+  justify-content: center;
+  padding: var(--space-s);
+}
+
+.order-summary,
+.order-summary + * {
+  margin-block-start: var(--space-l);
+}
+
+.order-summary {
+  background: var(--clr-neutral-rose-50);
+  border-radius: var(--radius-s);
+  padding: var(--space-xxs) var(--space-m);
+}
+
+.order-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: var(--space-s);
 }
 /* End of components layer */
 
