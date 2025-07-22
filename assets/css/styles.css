@@ -143,6 +143,7 @@ svg[role='img'][width][height] {
 }
 
 dialog {
+  color: var(--clr-neutral-rose-900);
   border: none;
   border-radius: var(--radius-xs);
   padding: var(--space-xl);
@@ -498,16 +499,24 @@ dialog::backdrop {
   border-radius: var(--radius-s);
 }
 
-.confimr-dialog {
+.confirm-dialog {
   --flow-space: var(--space-xxs);
   max-width: 590px;
   width: 100%;
 }
 
-.confimr-dialog button {
+.confirm-dialog button {
   width: 100%;
   justify-content: center;
   padding: var(--space-s);
+}
+
+.confirm-dialog p {
+  color: var(--clr-neutral-rose-500);
+}
+
+.confirm-dialog h2 {
+  margin-top: var(--space-m);
 }
 
 .order-summary,
