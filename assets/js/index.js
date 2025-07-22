@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             srcset="${element.image.desktop}"
             media="(min-width: 900px)"
           />
-          <img src="${element.image.mobile}" />
+          <img alt="" src="${element.image.mobile}" />
         </picture>
 
         <div class="product-item__actions">
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const elem = document.createElement('li')
       elem.innerHTML = /* HTML */ `
         <div class="cart-item cluster text-sm" data-nowrap>
-          <img class="cart-item__image" src="${item.image.thumbnail}" />
+          <img alt="" class="cart-item__image" src="${item.image.thumbnail}" />
           <div class="cart-item__info flow">
             <h3 class="cart-item__name grid-in-name text-sm">${item.name}</h3>
             <div class="cart-item__price-info cluster grid-in-price-info">
