@@ -69,13 +69,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             data-quantity-controls
             hidden
           >
-            <button data-action="decrement">
+            <button data-action="decrement" type="button" aria-label="Decrement quantity">
               <svg class="icon icon--quantity-control">
                 <use href="#:decrement-quantity" />
               </svg>
             </button>
             <span class="product-item__quantity" data-quantity></span>
-            <button data-action="increment">
+            <button data-action="increment" type="button" aria-label="Increment quantity">
               <svg class="icon icon--quantity-control">
                 <use href="#:increment-quantity" />
               </svg>
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     confirmModal.showModal()
   })
 
-  confirmModal.addEventListener('submit', (ev) => {
+  confirmModal.addEventListener('submit', () => {
     cart.clear()
     productListElem.querySelectorAll('[data-product-id]').forEach((item) => {
       updateProductItemUI(item.dataset.productId)
@@ -177,8 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function updateCartUI() {
     const cartItemQty = $('[data-selector="cart-items-quantity"]')
     const cartEmpty = $('[data-selector="cart-empty"]')
-    const cartList = $('[data-selector="cart-list"]')
-    const cartContainer = cartList.closest('[data-selector="cart-content"]')
+    const cartContent = $('[data-selector="cart-content"]')
     const cartTotalElem = $('[data-selector="cart-total"]')
     const cartTotalPrice = cart
       .values()
@@ -189,10 +188,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     cartItemQty.textContent = cartTotalQty
 
     if (cart.size > 0) {
-      cartContainer.hidden = false
+      cartContent.hidden = false
       cartEmpty.hidden = true
     } else {
-      cartContainer.hidden = true
+      cartContent.hidden = true
       cartEmpty.hidden = false
     }
 
