@@ -256,6 +256,11 @@ dialog::backdrop {
   --icon-width: 0.625rem;
 }
 
+.icon--empty-cart {
+  --icon-height: auto;
+  --icon-width: 7.75rem;
+}
+
 .icon--order-confirmed {
   --icon-height: 2.625rem;
   --icon-width: 2.625rem;
